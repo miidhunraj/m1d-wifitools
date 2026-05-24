@@ -53,7 +53,7 @@ sudo apt update && sudo apt install -y \
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/miidhunee/m1d-wifitools.git
+git clone https://github.com/miidhunraj/m1d-wifitools.git
 cd m1d-wifitools
 
 # 2. Source the toolkit
@@ -65,11 +65,12 @@ _wifitools_menu
 
 **Auto-load on every terminal:**
 ```bash
-echo "source ~/m1d-wifitools/.m1d_wifitools" >> ~/.bashrc
+echo "source ~/.m1d_wifitools" >> ~/.bashrc
+echo "alias wi='_wifitools_menu'" >> ~/.bashrc
 source ~/.bashrc
 ```
 
-Then just type `_wifitools_menu` anywhere.
+Then just type `wi` anywhere.
 
 ---
 
