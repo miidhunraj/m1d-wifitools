@@ -5,7 +5,7 @@
 ████╗ ████║ ██║ ██╔══██╗
 ██╔████╔██║ ██║ ██║  ██║   M 1 D   W I F I   T O O L K I T
 ██║╚██╔╝██║ ██║ ██║  ██║   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-██║ ╚═╝ ██║ ██║ ██████╔╝   WIFI TOOLKIT  ·  GREY HAT EDITION
+██║ ╚═╝ ██║ ██║ ██████╔╝   WIFI TOOLKIT  ·  AUTO EDITION
 ╚═╝     ╚═╝ ╚═╝ ╚═════╝
 ```
 
@@ -16,10 +16,10 @@
 
 ## Overview
 
-**M1D Wifi Toolkit** is a cyberpunk-styled, menu-driven Bash toolkit for wireless penetration testing on Kali Linux. Built for grey hat operators who want a clean, fast, and professional terminal UI.
+**M1D Wifi Toolkit** is a styled, menu-driven Bash toolkit for wireless penetration testing on Kali Linux. Built for auto operators who want a clean, fast, and professional terminal UI.
 
 **Creator:** M1D  
-**Admin:** [@miidhunee](https://github.com/miidhunee)  
+**Admin:** [@miidhunee](https://github.com/miidhunraj)  
 **Platform:** Kali Linux  
 **Build:** M1D PRIVATE EDITION
 
@@ -124,6 +124,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 ---
 
 <p align="center">
-  <b>M1D · WIFI TOOLKIT · GREY HAT EDITION</b><br>
+  <b>M1D · WIFI TOOLKIT · AUTO EDITION</b><br>
   <i>Initializing wireless operations environment...</i>
 </p>
