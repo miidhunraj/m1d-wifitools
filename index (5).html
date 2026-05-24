@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M1D · WIFI TOOLKIT · GREY HAT EDITION</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=VT323&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red:    #e63946;
+    --blue:   #1a73e8;
+    --cyan:   #00d4ff;
+    --dim:    #4a5568;
+    --dimmer: #2d3748;
+    --bg:     #050a0f;
+    --bg2:    #0a1220;
+    --bg3:    #0f1a2e;
+    --text:   #c9d6df;
+    --white:  #e8f4fd;
+    --green:  #00ff88;
+    --yellow: #ffd60a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* grid bg */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid rgba(0,212,255,0.15);
+    padding: 16px 0;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 2px;
+  }
+  .topbar span { color: var(--cyan); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 60px 0 40px;
+    text-align: center;
+  }
+
+  .ascii-logo {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(8px, 1.5vw, 13px);
+    line-height: 1.4;
+    color: var(--red);
+    text-shadow: 0 0 20px rgba(230,57,70,0.5);
+    white-space: pre;
+    display: inline-block;
+    animation: flicker 8s infinite;
+  }
+
+  @keyframes flicker {
+    0%,96%,100% { opacity: 1; }
+    97% { opacity: 0.7; }
+    98% { opacity: 1; }
+    99% { opacity: 0.5; }
+  }
+
+  .hero-box {
+    border: 1px solid rgba(0,212,255,0.25);
+    border-top: 2px solid var(--cyan);
+    background: linear-gradient(180deg, rgba(0,212,255,0.04) 0%, transparent 100%);
+    padding: 36px 24px;
+    margin: 32px 0;
+    position: relative;
+  }
+  .hero-box::before {
+    content: '[ M1D WIFI TOOLKIT ]';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg);
+    padding: 0 12px;
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+  }
+
+  .title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(22px, 5vw, 42px);
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  .title span { color: var(--red); }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--dim);
+    letter-spacing: 4px;
+    margin-top: 10px;
+  }
+  .subtitle b { color: var(--cyan); font-weight: normal; }
+
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .badge {
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+  .badge-red   { border-color: var(--red);  color: var(--red); }
+  .badge-cyan  { border-color: var(--cyan); color: var(--cyan); }
+  .badge-green { border-color: var(--green);color: var(--green); }
+  .badge-dim   { border-color: var(--dim);  color: var(--dim); }
+
+  /* ── META GRID ── */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.1);
+    margin: 32px 0;
+  }
+  .meta-cell {
+    background: var(--bg2);
+    padding: 18px 20px;
+  }
+  .meta-label {
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .meta-value {
+    font-size: 14px;
+    color: var(--white);
+  }
+  .meta-value.accent { color: var(--cyan); }
+  .meta-value.red    { color: var(--red); }
+
+  /* ── TERMINAL BLOCK ── */
+  .terminal {
+    background: var(--bg2);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-top: 2px solid rgba(0,212,255,0.4);
+    margin: 40px 0;
+    font-size: 13px;
+  }
+  .terminal-bar {
+    background: var(--bg3);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(0,212,255,0.1);
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 2px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-r { background: var(--red); }
+  .dot-y { background: var(--yellow); }
+  .dot-g { background: var(--green); }
+  .terminal-body { padding: 20px 24px; line-height: 2; }
+  .prompt { color: var(--green); }
+  .cmd    { color: var(--white); }
+  .out    { color: var(--dim); padding-left: 16px; }
+  .out.hi { color: var(--cyan); }
+
+  /* ── FEATURES ── */
+  .section-label {
+    font-size: 10px;
+    color: var(--cyan);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(0,212,255,0.15);
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.08);
+    margin-bottom: 40px;
+  }
+  .feature {
+    background: var(--bg);
+    padding: 22px 20px;
+    transition: background 0.2s;
+  }
+  .feature:hover { background: var(--bg2); }
+  .feature-tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .feature-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .feature-list {
+    list-style: none;
+    font-size: 12px;
+    color: var(--dim);
+    line-height: 1.9;
+  }
+  .feature-list li::before { content: '▸ '; color: var(--cyan); }
+
+  /* ── INSTALL ── */
+  .install-block {
+    background: var(--bg2);
+    border-left: 3px solid var(--cyan);
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-size: 13px;
+    line-height: 2;
+  }
+  .install-block .step {
+    font-size: 10px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .install-block code {
+    color: var(--green);
+    display: block;
+  }
+  .install-block code span { color: var(--dim); }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    border: 1px solid rgba(230,57,70,0.3);
+    background: rgba(230,57,70,0.04);
+    padding: 20px 24px;
+    margin: 40px 0;
+    font-size: 12px;
+    line-height: 1.9;
+    color: var(--dim);
+  }
+  .disclaimer strong {
+    color: var(--red);
+    display: block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  /* ── CTA ── */
+  .cta-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 40px 0;
+  }
+  .btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    text-decoration: none;
+    border: 1px solid;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--bg);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--cyan);
+  }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--dim);
+    color: var(--dim);
+  }
+  .btn-outline:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(0,212,255,0.1);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 11px;
+    color: var(--dimmer);
+    letter-spacing: 2px;
+    line-height: 2;
+  }
+  footer span { color: var(--cyan); }
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--cyan); }
+
+  .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <span>M1D·WIFI·TOOLKIT</span>
+      <span>GREY HAT EDITION · KALI LINUX · <span id="clock"></span></span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <pre class="ascii-logo">
+███╗   ███╗ ██╗ ██████╗
+████╗ ████║ ██║ ██╔══██╗
+██╔████╔██║ ██║ ██║  ██║
+██║╚██╔╝██║ ██║ ██║  ██║
+██║ ╚═╝ ██║ ██║ ██████╔╝
+╚═╝     ╚═╝ ╚═╝ ╚═════╝</pre>
+
+      <div class="hero-box">
+        <div class="title"><span>M1D</span> WIFI TOOLKIT</div>
+        <div class="subtitle"><b>WIFI TOOLKIT</b> · GREY HAT EDITION · M1D PRIVATE BUILD</div>
+        <div class="badge-row">
+          <span class="badge badge-red">Kali Linux</span>
+          <span class="badge badge-cyan">Bash</span>
+          <span class="badge badge-green">Grey Hat</span>
+          <span class="badge badge-dim">Authorized Testing Only</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- META -->
+    <div class="meta-grid reveal">
+      <div class="meta-cell">
+        <div class="meta-label">Creator</div>
+        <div class="meta-value accent">M1D</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Admin</div>
+        <div class="meta-value accent">@miidhunee</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Platform</div>
+        <div class="meta-value">Kali Linux</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Build</div>
+        <div class="meta-value red">M1D PRIVATE EDITION</div>
+      </div>
+      <div class="meta-cell">
+        <div class="meta-label">Status</div>
+        <div class="meta-value accent"><span class="blink">▶</span> ACTIVE</div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div class="reveal">
+      <div class="section-label">// MODULES</div>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-tag">01 · INTERFACE</div>
+          <div class="feature-title">ADAPTER CONTROL</div>
+          <ul class="feature-list">
+            <li>Enable / disable monitor mode</li>
+            <li>MAC address spoofing</li>
+            <li>Restore original MAC</li>
+            <li>Interface detail viewer</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <div class="feature-tag">02 · RECON</div>
+          <div class="feature-title">NETWORK DISCOVERY</div>
+          <ul class="feature-list">
+            <li>Scan nearby networks (airodump)</li>
+            <li>Client enumeration on target AP</li>
+            <li>Passive network discovery</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <div class="feature-tag">03 · CAPTURE</div>
+          <div class="feature-title">PACKET CAPTURE</div>
+          <ul class="feature-list">
+            <li>WPA 4-way handshake capture</li>
+            <li>PMKID capture (hcxdumptool)</li>
+            <li>Deauthentication frames</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <div class="feature-tag">04 · CRACK</div>
+          <div class="feature-title">PASSWORD RECOVERY</div>
+          <ul class="feature-list">
+            <li>aircrack-ng dictionary attack</li>
+            <li>Hashcat WPA (hc22000)</li>
+            <li>Hashcat PMKID cracking</li>
+          </ul>
+        </div>
+        <div class="feature">
+          <div class="feature-tag">05 · MISC</div>
+          <div class="feature-title">UTILITIES</div>
+          <ul class="feature-list">
+            <li>WPS attack via reaver</li>
+            <li>Kill interfering processes</li>
+            <li>Restart NetworkManager</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTALL -->
+    <div class="reveal">
+      <div class="section-label">// INSTALLATION</div>
+
+      <div class="install-block">
+        <div class="step">Step 01 · Dependencies</div>
+        <code>sudo apt update && sudo apt install -y \</code>
+        <code>&nbsp; aircrack-ng hcxdumptool hcxtools hashcat \</code>
+        <code>&nbsp; macchanger reaver netdiscover iw wireless-tools</code>
+      </div>
+
+      <div class="install-block">
+        <div class="step">Step 02 · Clone</div>
+        <code>git clone https://github.com/miidhunee/m1d-wifitools.git</code>
+        <code>cd m1d-wifitools</code>
+      </div>
+
+      <div class="install-block">
+        <div class="step">Step 03 · Source & Launch</div>
+        <code>source .m1d_wifitools</code>
+        <code>_wifitools_menu</code>
+      </div>
+
+      <div class="install-block">
+        <div class="step">Optional · Auto-load on every terminal</div>
+        <code>echo "source ~/m1d-wifitools/.m1d_wifitools" >> ~/.bashrc</code>
+        <code>source ~/.bashrc <span># then just type: _wifitools_menu</span></code>
+      </div>
+    </div>
+
+    <!-- TERMINAL DEMO -->
+    <div class="reveal">
+      <div class="section-label">// PREVIEW</div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          &nbsp; root@kali — m1d-wifitools
+        </div>
+        <div class="terminal-body">
+          <div><span class="prompt">root@kali</span><span class="cmd"> ~ # source .m1d_wifitools && _wifitools_menu</span></div>
+          <div class="out hi">  ╔══════════════════════════════════════════════════════════════════════╗</div>
+          <div class="out hi">  ║  M1D · WIFI TOOLKIT · GREY HAT EDITION                              ║</div>
+          <div class="out hi">  ║  CREATOR M1D  │  ADMIN @miidhunee  │  BUILD M1D PRIVATE EDITION    ║</div>
+          <div class="out hi">  ╠══════════════════════════════════════════════════════════════════════╣</div>
+          <div class="out hi">  ║  ⚡  STATUS  ▶  AUTHORIZED PENETRATION TESTING ONLY                ║</div>
+          <div class="out hi">  ╚══════════════════════════════════════════════════════════════════════╝</div>
+          <div class="out">&nbsp;</div>
+          <div class="out">  ◈ Interfaces: wlan0mon</div>
+          <div class="out">&nbsp;</div>
+          <div class="out">  [1] Enable monitor mode   [6]  Scan nearby networks</div>
+          <div class="out">  [2] Disable monitor mode  [9]  Capture WPA handshake</div>
+          <div class="out">  [3] Change MAC address    [12] Crack with aircrack-ng</div>
+          <div class="out">&nbsp;</div>
+          <div><span class="prompt">  M1D·WIFI ▶</span><span class="cmd"> <span class="blink">_</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-row reveal">
+      <a class="btn btn-primary" href="https://github.com/miidhunee/m1d-wifitools" target="_blank">
+        ↗ View on GitHub
+      </a>
+      <a class="btn btn-outline" href="https://github.com/miidhunee/m1d-wifitools/archive/refs/heads/main.zip" target="_blank">
+        ↓ Download ZIP
+      </a>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer reveal">
+      <strong>⚠ Legal Disclaimer</strong>
+      This tool is provided for AUTHORIZED PENETRATION TESTING ONLY.
+      Use exclusively on networks you own or have explicit written permission to test.
+      The author (M1D / @miidhunee) assumes zero liability for any misuse, illegal activity,
+      or damages caused by this software. Unauthorized use against networks you do not own
+      is illegal under computer fraud and abuse laws worldwide.
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>M1D · WIFI TOOLKIT · GREY HAT EDITION</div>
+    <div><span>@miidhunee</span> · Kali Linux · MIT License</div>
+    <div style="margin-top:12px; font-size:10px;">
+      <a href="https://github.com/miidhunee/m1d-wifitools">github</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/miidhunee/m1d-wifitools/blob/main/LICENSE">license</a>
+    </div>
+    <div style="margin-top:16px; color: var(--dimmer);">
+      Initializing wireless operations environment<span class="blink">...</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function tick() {
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      now.toLocaleTimeString('en-GB', { hour12: false });
+  }
+  tick(); setInterval(tick, 1000);
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
