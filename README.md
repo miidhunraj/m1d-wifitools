@@ -57,7 +57,7 @@ git clone https://github.com/miidhunraj/m1d-wifitools.git
 cd m1d-wifitools
 
 # 2. Source the toolkit
-source .m1d_wifitools
+source .m1d-wifitools
 
 # 3. Launch
 _wifitools_menu
@@ -65,7 +65,7 @@ _wifitools_menu
 
 **Auto-load on every terminal:**
 ```bash
-echo "source ~/.m1d_wifitools" >> ~/.bashrc
+echo "source ~/.m1d-wifitools" >> ~/.bashrc
 echo "alias wi='_wifitools_menu'" >> ~/.bashrc
 source ~/.bashrc
 ```
