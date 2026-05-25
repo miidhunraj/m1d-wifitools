@@ -31,6 +31,30 @@ detect_env() {
     PKG_MGR="apt"
   fi
 }
+# ── Open Instagram ────────────────────────────────────────────────────────────
+open_instagram() {
+  echo -e "\n  ${BCY}╔══════════════════════════════════════════════════════════╗${RESET}"
+  echo -e "  ${BCY}║                                                          ║${RESET}"
+  echo -e "  ${BCY}║   ${Y}★  Follow the creator on Instagram!  ★${RESET}               ${BCY}║${RESET}"
+  echo -e "  ${BCY}║   ${W}▶  instagram.com/miidhunee${RESET}                            ${BCY}║${RESET}"
+  echo -e "  ${BCY}║                                                          ║${RESET}"
+  echo -e "  ${BCY}╚══════════════════════════════════════════════════════════╝${RESET}\n"
+  echo -e "  ${DGR}Opening Instagram...${RESET}\n"
+  sleep 1
+ # Try every common opener — works on Linux desktop, Termux, WSL
+  if command -v xdg-open &>/dev/null; then
+    xdg-open "$INSTAGRAM" 2>/dev/null &
+  elif command -v termux-open-url &>/dev/null; then
+    termux-open-url "$INSTAGRAM" 2>/dev/null &
+  elif command -v open &>/dev/null; then
+    open "$INSTAGRAM" 2>/dev/null &
+  elif command -v sensible-browser &>/dev/null; then
+    sensible-browser "$INSTAGRAM" 2>/dev/null &
+  else
+    echo -e "  ${Y}[!] Could not auto-open browser.${RESET}"
+    echo -e "  ${DGR}    Visit manually: ${W}$INSTAGRAM${RESET}\n"
+  fi
+}
 
 print_banner() {
   clear
