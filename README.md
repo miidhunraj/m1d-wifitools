@@ -187,7 +187,11 @@ m1d-wifi
 | WPS (reaver)             | ✅          | ⚠️ build needed  | ❌                 |
 
 ---
-
+## Uninstall
+```bash
+chmod +x ./uninstall.sh
+./uninstall.sh
+```
 ## Requirements
 
 - Bash 4+
